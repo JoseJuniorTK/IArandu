@@ -1,0 +1,114 @@
+<html>
+    <head>
+    </head>
+    <body>
+
+    <h1> Escaneador de documentos </h1>
+
+
+<!-- HTML button to capture image from webcam -->
+<button id="capture-button">Capture</button>
+
+<!-- Video element to display webcam stream -->
+<video id="webcam-video" autoplay></video>
+
+<!-- Image element to display captured image -->
+<img id="captured-image">
+
+
+    <input id="fileInput" type="file" />
+    <button id="submitButton">Submit</button>
+
+    </body>
+    <footer>
+
+<!-- JavaScript code to capture image from webcam -->
+
+<script>
+    function sendFile(fileInput) {
+      const file = fileInput.files[0];
+      const formData = new FormData();
+      formData.append("file", file);
+
+      fetch("https://152.67.42.101:4002/file", {
+        method: "POST",
+        body: formData
+      })
+    .then(response => {
+    // Check if the response is successful
+    if (response.ok) {
+      // Start the download
+      response.blob().then(blob => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.style.display = "none";
+        a.href = url;
+        a.download = "image.jpg";  // file name
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+      });
+    } else {
+      // Handle the error
+    }
+  })
+        .catch(error => {
+          console.error(error);
+        });
+    }
+
+    const fileInput = document.getElementById("fileInput");
+    const submitButton = document.getElementById("submitButton");
+
+    fileInput.addEventListener("change", () => sendFile(fileInput));
+    submitButton.addEventListener("click", () => sendFile(fileInput));
+  </script>
+
+<script>
+  // Get DOM elements
+  const captureButton = document.getElementById('capture-button');
+  const webcamVideo = document.getElementById('webcam-video');
+  const capturedImage = document.getElementById('captured-image');
+
+  // Add click event listener to capture button
+  captureButton.addEventListener('click', () => {
+    // Check if getUserMedia method is available
+    if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+      // Prompt user to allow access to webcam and microphone
+      navigator.mediaDevices.getUserMedia({video: true, audio: false})
+        // Set video element src to webcam stream
+        .then(mediaStream => {
+          webcamVideo.srcObject = mediaStream;
+          return mediaStream;
+        })
+        // Capture single image from video stream
+        .then(mediaStream => {
+          const imageCapture = new ImageCapture(mediaStream.getVideoTracks()[0]);
+          return imageCapture.takePhoto();
+        })
+        // Set image element src to captured image
+        .then(blob => {
+          capturedImage.src = URL.createObjectURL(blob);
+        console.log(capturedImage.src)
+        
+        //check it later
+        return fetch('/catch', {
+            method: 'POST',
+            body: blob
+            });
+        });
+    } else {
+      // Log error if getUserMedia method is not available
+      console.error('getUserMedia is not supported by this browser');
+    }
+  });
+
+</script>
+
+
+
+    </footer>
+
+
+
+</html>

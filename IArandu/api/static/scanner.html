@@ -1,0 +1,240 @@
+<!--
+
+=========================================================
+* Gaia Bootstrap Template - v1.0.1
+=========================================================
+
+* Product Page: https://www.creative-tim.com/product/gaia-bootstrap-template
+* Licensed under MIT (https://github.com/creativetimofficial/gaia-bootstrap-template/blob/master/LICENSE.md)
+* Copyright 2019 Creative Tim (http://www.creative-tim.com)
+
+* Coded by Creative Tim
+
+=========================================================
+
+* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <style>
+            #file{
+                display: none;
+            }
+        </style>
+    <meta charset="utf-8" />
+    <link rel="apple-touch-icon" sizes="76x76" href="static/assets/img/apple-icon.png">
+	<link rel="icon" type="image/png" sizes="96x96" href="static/assets/img/favicon.png">
+
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <title>IArandu</title>
+    <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
+    <link href="static/assets/css/bootstrap.css" rel="stylesheet" />
+    <link href="static/assets/css/gaia.css" rel="stylesheet"/>
+
+    <!--     Fonts and icons     -->
+    <link href='https://fonts.googleapis.com/css?family=Cambo|Poppins:400,600' rel='stylesheet' type='text/css'>
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" rel="stylesheet">
+    <link href="static/assets/css/fonts/pe-icon-7-stroke.css" rel="stylesheet">
+</head>
+
+<body>
+
+    <nav class="navbar navbar-default navbar-fixed-top" color-on-scroll="200">
+        <!-- if you want to keep the navbar hidden you can add this class to the navbar "navbar-burger"-->
+        <div class="container">
+            <div class="navbar-header">
+                <button id="menu-toggle" type="button" class="navbar-toggle" data-toggle="collapse" data-target="#example">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar bar1"></span>
+                    <span class="icon-bar bar2"></span>
+                    <span class="icon-bar bar3"></span>
+                </button>
+                <a href="http://www.creative-tim.com" class="navbar-brand">
+                    IArandu
+                </a>
+            </div>
+            <div class="collapse navbar-collapse">
+                <ul class="nav navbar-nav navbar-right navbar-uppercase">
+                    <li>
+                        <a href="#" target="_blank">Sobre nós</a>
+                    </li>
+                    <li>
+                        <a href="/scanner" class="btn btn-danger btn-fill">Comece a digitalizar</a>
+                    </li>
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
+    </nav>
+
+     <div class="section">
+        <div class="container">
+            <div class="row">
+                <br><br>
+                <div class="title-area">
+        <h2>Defina o estado dos seus documentos:</h2>
+                    <div class="separator separator-danger">✻</div>
+
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="info-icon">
+                        <div class="icon text-danger">
+                            <input id="capture-button" type="image" src="static/camera.png" alt="Button">
+                        </div>
+                        <h3>Câmera</h3>
+                        <p class="description">Essa opção permite capturar uma imagem de algum documento e digitaliza-lo.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="info-icon">
+                        <div class="icon text-danger">
+                            <img src = "static/upload.png" id = "image" onclick = "pro1()";>
+                                <input type = "file" id = "file">
+
+                            
+                        </div>
+                        <h3>Local</h3>
+                        <p class="description">Aqui você envia seu documento e ele é digitalizado.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <br><br><br>
+        <center><button class="btn btn-danger btn-fill" id="submitButton">Enviar</button></center>
+
+    <!-- Video element to display webcam stream -->
+<video id="webcam-video" autoplay></video>
+
+<!-- Image element to display captured image -->
+<img id="captured-image">
+
+    <footer class="footer footer-big footer-color-black" data-color="black">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-2 col-sm-3">
+                    <div class="info">
+                        <h5 class="title">Mais informações</h5>
+                        <nav>
+                            <ul>
+                                <li>
+                                    <a href="#">Home</a></li>
+                                <li>
+ 
+                            </ul>
+                        </nav>
+                    </div>
+                
+                </div>
+            </div>
+            <hr>
+            <div class="copyright">
+                 © <script> document.write(new Date().getFullYear()) </script> Feito por José M. J. L. Perdigão
+            </div>
+        </div>
+    </footer>
+
+</body>
+
+<!--   core js files    -->
+<script src="static/assets/js/jquery.min.js" type="text/javascript"></script>
+<script src="static/assets/js/bootstrap.js" type="text/javascript"></script>
+
+<!--  js library for devices recognition -->
+<script type="text/javascript" src="static/assets/js/modernizr.js"></script>
+
+<!--  script for google maps   -->
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js"></script>
+
+<!--   file where we handle all the script from the Gaia - Bootstrap Template   -->
+<script type="text/javascript" src="static/assets/js/gaia.js"></script>
+
+
+<script>
+    function sendFile(fileInput) {
+      const file = fileInput.files[0];
+      const formData = new FormData();
+      formData.append("file", file);
+
+      fetch("https://152.67.42.101:4002/file", {
+        method: "POST",
+        body: formData
+      })
+    .then(response => {
+    // Check if the response is successful
+    if (response.ok) {
+      // Start the download
+      response.blob().then(blob => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.style.display = "none";
+        a.href = url;
+        a.download = "image.jpg";  // file name
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+      });
+    } else {
+      // Handle the error
+    }
+  })
+        .catch(error => {
+          console.error(error);
+        });
+    }
+
+  </script>
+
+<script>
+  // Get DOM elements
+  const captureButton = document.getElementById('capture-button');
+  const webcamVideo = document.getElementById('webcam-video');
+  const capturedImage = document.getElementById('captured-image');
+
+  // Add click event listener to capture button
+  captureButton.addEventListener('click', () => {
+    // Check if getUserMedia method is available
+    if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+      // Prompt user to allow access to webcam and microphone
+      navigator.mediaDevices.getUserMedia({video: true, audio: false})
+        // Set video element src to webcam stream
+        .then(mediaStream => {
+          webcamVideo.srcObject = mediaStream;
+          return mediaStream;
+        })
+        // Capture single image from video stream
+        .then(mediaStream => {
+          const imageCapture = new ImageCapture(mediaStream.getVideoTracks()[0]);
+          return imageCapture.takePhoto();
+        })
+        // Set image element src to captured image
+        .then(blob => {
+          capturedImage.src = URL.createObjectURL(blob);
+        console.log(capturedImage.src)
+        
+        //check it later
+        return fetch('/catch', {
+            method: 'POST',
+            body: blob
+            });
+        });
+    } else {
+      // Log error if getUserMedia method is not available
+      console.error('getUserMedia is not supported by this browser');
+    }
+  });
+
+</script>
+
+
+        <script>
+            function pro1(){
+                document.getElementById("file").click();
+            }
+        </script>
+</html>
